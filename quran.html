@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Quran</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;600;700&family=Hind+Siliguri:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+
+            /* LIGHT + EYE COOLING */
+
+            --bg: #eef4f1;
+            --card: #ffffff;
+            --soft: #f6faf8;
+            --line: #d9e5df;
+
+            --text: #1f2937;
+            --muted: #64748b;
+
+            --green: #16a34a;
+            --green-hover: #15803d;
+
+            --blue: #2563eb;
+            --blue-hover: #1d4ed8;
+
+            --purple: #7c3aed;
+            --purple-hover: #6d28d9;
+
+            --orange: #ea580c;
+            --orange-hover: #c2410c;
+
+            --teal: #0f766e;
+            --teal-hover: #115e59;
+
+            --pink: #db2777;
+            --pink-hover: #be185d;
+
+            --wbw-bg: #f7fbff;
+            --translation-bg: #f8fafc;
+
+            --bn: #0f172a;
+            --bn-accent: #0f766e;
+
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* HEADER */
+
+        header {
+
+            background: rgba(255, 255, 255, .94);
+
+            border-bottom: 1px solid var(--line);
+
+        }
+
+        .topbar {
+            max-width: 1200px;
+            margin: auto;
+            padding: 14px 18px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        /* TITLE */
+
+        .title {
+            font-size: clamp(20px, 3vw, 28px);
+            font-weight: 700;
+            letter-spacing: .3px;
+            color: #0f172a;
+        }
+
+        /* CONTROLS */
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        input {
+            width: 95px;
+            height: 46px;
+
+            border: 1px solid var(--line);
+            outline: none;
+
+            border-radius: 12px;
+
+            background: white;
+
+            color: var(--text);
+
+            padding: 0 12px;
+
+            font-size: 15px;
+        }
+
+        input::placeholder {
+            color: var(--muted);
+        }
+
+        input:focus {
+            outline: 2px solid #bfdbfe;
+            border-color: #93c5fd;
+        }
+
+        button {
+            border: none;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        /* LOAD BUTTON */
+
+        button.load {
+            height: 46px;
+            padding: 0 18px;
+
+            border-radius: 12px;
+
+            background: var(--green);
+            color: white;
+
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        button.load:hover {
+            background: var(--green-hover);
+        }
+
+        /* MAIN */
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 16px 18px 50px;
+        }
+
+        /* LOADING */
+
+        .loading {
+            padding: 40px 0;
+            text-align: center;
+            color: var(--muted);
+            font-size: 18px;
+        }
+
+        /* ROW */
+
+        .row {
+
+            background: var(--card);
+
+            border: 1px solid var(--line);
+
+            border-radius: 22px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+
+            gap: 18px;
+
+            padding: 24px 20px;
+
+            margin-bottom: 12px;
+
+            box-shadow:
+                0 4px 18px rgba(15, 23, 42, .04);
+        }
+
+        /* RIGHT */
+
+        .right {
+            display: flex;
+            align-items: flex-start;
+            gap: 18px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        /* NUMBER */
+
+        .number {
+            min-width: 42px;
+
+            color: var(--muted);
+
+            font-size: 15px;
+
+            padding-top: 12px;
+
+            text-align: center;
+
+            flex-shrink: 0;
+        }
+
+        /* AYAH */
+
+        .ayah {
+            flex: 1;
+
+            direction: rtl;
+            unicode-bidi: isolate;
+
+            text-align: right;
+
+            font-family: "Noto Naskh Arabic", serif;
+
+            font-size: clamp(32px, 4vw, 46px);
+
+            font-weight: 600;
+
+            line-height: 2.25;
+
+            color: #111827;
+
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        /* ACTIONS */
+
+        .actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        /* BUTTON BASE */
+
+        .copy,
+        .play,
+        .loop,
+        .translate,
+        .tashkeel {
+
+            min-width: 112px;
+
+            height: 44px;
+
+            border-radius: 12px;
+
+            color: white;
+
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        /* COPY */
+
+        .copy {
+            background: var(--blue);
+        }
+
+        .copy:hover {
+            background: var(--blue-hover);
+        }
+
+        /* PLAY */
+
+        .play {
+            background: var(--purple);
+        }
+
+        .play:hover {
+            background: var(--purple-hover);
+        }
+
+        /* LOOP */
+
+        .loop {
+            background: var(--orange);
+        }
+
+        .loop:hover {
+            background: var(--orange-hover);
+        }
+
+        /* TRANSLATE */
+
+        .translate {
+            background: var(--teal);
+        }
+
+        .translate:hover {
+            background: var(--teal-hover);
+        }
+
+        /* TASHKEEL */
+
+        .tashkeel {
+            background: var(--pink);
+        }
+
+        .tashkeel:hover {
+            background: var(--pink-hover);
+        }
+
+        /* =========================
+   TRANSLATION WRAP
+========================= */
+
+        .translation-wrap {
+            display: none;
+
+            margin-top: -2px;
+            margin-bottom: 20px;
+        }
+
+        /* =========================
+   WBW SECTION
+========================= */
+
+        .wbw {
+
+            direction: rtl;
+
+            text-align: right;
+
+            line-height: 3;
+
+            padding: 28px 24px;
+
+            background: var(--wbw-bg);
+
+            border: 1px solid #dbeafe;
+
+            border-radius: 22px;
+
+        }
+
+        /*
+Preserves Arabic flow correctly.
+*/
+
+        .word {
+
+            display: inline-flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            vertical-align: top;
+
+            margin-left: 14px;
+
+            margin-bottom: 24px;
+        }
+
+        /* ARABIC WORD */
+
+        .word-ar {
+
+            font-family: "Noto Naskh Arabic", serif;
+
+            font-size: 36px;
+
+            font-weight: 600;
+
+            line-height: 1.7;
+
+            direction: rtl;
+
+            unicode-bidi: isolate;
+
+            color: #111827;
+        }
+
+        /* BANGLA WORD */
+
+        .word-bn {
+
+            direction: ltr;
+
+            text-align: center;
+
+
+
+            font-size: 20px;
+
+            font-weight: 600;
+
+            line-height: 1.8;
+
+            margin-top: 6px;
+
+            color: var(--bn-accent);
+
+            max-width: 110px;
+
+            word-break: break-word;
+        }
+
+        /* FULL TRANSLATION */
+
+        .full-translation {
+
+            margin-top: 18px;
+
+            padding: 26px 24px;
+
+            background: var(--translation-bg);
+
+            border: 1px solid #dbe4ee;
+
+            border-radius: 22px;
+
+            color: var(--bn);
+
+            font-size: 25px;
+
+            font-weight: 700;
+
+            line-height: 2.3;
+        }
+
+        /* MOBILE */
+
+        @media (max-width:700px) {
+
+            .topbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .controls {
+
+                width: 100%;
+
+                display: grid;
+
+                grid-template-columns: 1fr 1fr 1fr auto;
+            }
+
+            input {
+                width: 100%;
+                min-width: 0;
+            }
+
+            button.load {
+                padding: 0 16px;
+            }
+
+            .row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 16px;
+            }
+
+            .right {
+                width: 100%;
+                gap: 12px;
+            }
+
+            .actions {
+
+                width: 100%;
+
+                display: grid;
+
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .copy,
+            .play,
+            .loop,
+            .translate,
+            .tashkeel {
+
+                width: 100%;
+                min-width: 0;
+
+                height: 46px;
+            }
+
+            .number {
+                min-width: 30px;
+                padding-top: 8px;
+            }
+
+            .ayah {
+                font-size: 36px;
+                line-height: 2.15;
+            }
+
+            .word-ar {
+                font-size: 30px;
+            }
+
+            .word-bn {
+                font-size: 17px;
+            }
+
+            .full-translation {
+                font-size: 20px;
+                line-height: 2.2;
+            }
+
+        }
+
+        @media (max-width:420px) {
+
+            .controls {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            button.load {
+                grid-column: span 2;
+            }
+
+            .ayah {
+                font-size: 33px;
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+
+        <div class="topbar">
+
+            <div class="title">
+                📖 Quran
+            </div>
+
+            <div class="controls">
+
+                <input id="surah" type="number" value="2" placeholder="Surah">
+
+                <input id="start" type="number" value="255" placeholder="From">
+
+                <input id="end" type="number" value="255" placeholder="To">
+
+                <button class="load" onclick="loadQuran()">
+                    Load
+                </button>
+
+            </div>
+
+        </div>
+
+    </header>
+
+    <div class="container">
+        <div id="out"></div>
+    </div>
+
+    <script>
+
+        let currentAudio = null;
+        let currentButton = null;
+        let currentLoopButton = null;
+
+        /* =========================
+           STOP AUDIO
+        ========================= */
+
+        async function stopCurrentAudio() {
+
+            if (currentAudio) {
+
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+
+            }
+
+            if (currentButton) {
+
+                currentButton.textContent =
+                    "▶ Play";
+
+                currentButton.style.background =
+                    "";
+
+            }
+
+            if (currentLoopButton) {
+
+                currentLoopButton.textContent =
+                    "🔁 Loop";
+
+                currentLoopButton.style.background =
+                    "";
+
+            }
+
+            currentAudio = null;
+            currentButton = null;
+            currentLoopButton = null;
+
+        }
+
+        /* =========================
+           GET AUDIO
+        ========================= */
+
+        async function getAudioUrl(globalAyahNumber) {
+
+            const res = await fetch(
+                `https://api.alquran.cloud/v1/ayah/${globalAyahNumber}/ar.alafasy`
+            );
+
+            const data = await res.json();
+
+            return data.data.audio;
+
+        }
+
+        /* =========================
+           LOAD QURAN
+        ========================= */
+
+        async function loadQuran() {
+
+            const surah =
+                document.getElementById("surah").value;
+
+            const start =
+                parseInt(
+                    document.getElementById("start").value
+                );
+
+            const end =
+                parseInt(
+                    document.getElementById("end").value
+                );
+
+            const out =
+                document.getElementById("out");
+
+            out.innerHTML =
+                `<div class="loading">
+      Loading Quran...
+    </div>`;
+
+            try {
+
+                out.innerHTML = "";
+
+                for (let ayah = start; ayah <= end; ayah++) {
+
+                    const verseKey =
+                        `${surah}:${ayah}`;
+
+                    /* =========================
+                       FETCH WBW + TRANSLATION
+                    ========================= */
+
+                    const richUrl =
+                        `https://api.quran.com/api/v4/verses/by_key/${verseKey}?words=true&language=bn&word_fields=text_uthmani&translations=162`;
+
+                    const richRes =
+                        await fetch(richUrl);
+
+                    const richData =
+                        await richRes.json();
+
+                    const verse =
+                        richData.verse;
+
+                    /* =========================
+                       FETCH WITHOUT TASHKEEL
+                    ========================= */
+
+                    const cleanUrl =
+                        `https://api.alquran.cloud/v1/ayah/${verse.id}/quran-simple-clean`;
+
+                    const cleanRes =
+                        await fetch(cleanUrl);
+
+                    const cleanData =
+                        await cleanRes.json();
+
+                    const withoutTashkeel =
+                        cleanData.data.text;
+
+                    /* =========================
+                       WITH TASHKEEL
+                    ========================= */
+
+                    const withTashkeel =
+                        verse.words
+                            .filter(w => w.char_type_name === "word")
+                            .map(w => w.text_uthmani)
+                            .join(" ");
+
+                    /* =========================
+                       MAIN ROW
+                    ========================= */
+
+                    const row =
+                        document.createElement("div");
+
+                    row.className = "row";
+
+                    /* RIGHT */
+
+                    const right =
+                        document.createElement("div");
+
+                    right.className = "right";
+
+                    /* NUMBER */
+
+                    const num =
+                        document.createElement("div");
+
+                    num.className = "number";
+
+                    num.textContent =
+                        verse.verse_number;
+
+                    /* AYAH */
+
+                    const text =
+                        document.createElement("div");
+
+                    text.className = "ayah";
+
+                    text.textContent =
+                        withTashkeel;
+
+                    /* CURRENT MODE */
+
+                    let usingTashkeel = true;
+
+                    right.appendChild(num);
+                    right.appendChild(text);
+
+                    /* =========================
+                       ACTIONS
+                    ========================= */
+
+                    const actions =
+                        document.createElement("div");
+
+                    actions.className = "actions";
+
+                    /* =========================
+                       PLAY BUTTON
+                    ========================= */
+
+                    const playBtn =
+                        document.createElement("button");
+
+                    playBtn.className = "play";
+
+                    playBtn.textContent =
+                        "▶ Play";
+
+                    playBtn.onclick = async () => {
+
+                        try {
+
+                            if (currentButton === playBtn) {
+
+                                await stopCurrentAudio();
+                                return;
+
+                            }
+
+                            await stopCurrentAudio();
+
+                            playBtn.textContent =
+                                "Loading...";
+
+                            const audioUrl =
+                                await getAudioUrl(verse.id);
+
+                            const audio =
+                                new Audio(audioUrl);
+
+                            currentAudio = audio;
+                            currentButton = playBtn;
+
+                            playBtn.textContent =
+                                "⏹ Stop";
+
+                            playBtn.style.background =
+                                "#dc2626";
+
+                            await audio.play();
+
+                            audio.onended = () => {
+
+                                if (currentButton === playBtn) {
+
+                                    playBtn.textContent =
+                                        "▶ Play";
+
+                                    playBtn.style.background =
+                                        "";
+
+                                    currentAudio = null;
+                                    currentButton = null;
+
+                                }
+
+                            };
+
+                        }
+                        catch (e) {
+
+                            console.log(e);
+
+                        }
+
+                    };
+
+                    /* =========================
+                       LOOP BUTTON
+                    ========================= */
+
+                    const loopBtn =
+                        document.createElement("button");
+
+                    loopBtn.className = "loop";
+
+                    loopBtn.textContent =
+                        "🔁 Loop";
+
+                    loopBtn.onclick = async () => {
+
+                        try {
+
+                            if (currentLoopButton === loopBtn) {
+
+                                await stopCurrentAudio();
+                                return;
+
+                            }
+
+                            await stopCurrentAudio();
+
+                            loopBtn.textContent =
+                                "Loading...";
+
+                            const audioUrl =
+                                await getAudioUrl(verse.id);
+
+                            const audio =
+                                new Audio(audioUrl);
+
+                            audio.loop = true;
+
+                            currentAudio = audio;
+                            currentLoopButton = loopBtn;
+
+                            loopBtn.textContent =
+                                "⏹ Stop";
+
+                            loopBtn.style.background =
+                                "#dc2626";
+
+                            await audio.play();
+
+                        }
+                        catch (e) {
+
+                            console.log(e);
+
+                        }
+
+                    };
+
+                    /* =========================
+                       COPY BUTTON
+                    ========================= */
+
+                    const copyBtn =
+                        document.createElement("button");
+
+                    copyBtn.className = "copy";
+
+                    copyBtn.textContent =
+                        "Copy";
+
+                    copyBtn.onclick = async () => {
+
+                        try {
+
+                            await navigator.clipboard.writeText(
+                                text.textContent
+                            );
+
+                            copyBtn.textContent =
+                                "✓ Copied";
+
+                            copyBtn.style.background =
+                                "#16a34a";
+
+                            setTimeout(() => {
+
+                                copyBtn.textContent =
+                                    "Copy";
+
+                                copyBtn.style.background =
+                                    "";
+
+                            }, 1000);
+
+                        }
+                        catch {
+
+                            alert("Copy failed");
+
+                        }
+
+                    };
+
+                    /* =========================
+                       TASHKEEL TOGGLE
+                    ========================= */
+
+                    const tashkeelBtn =
+                        document.createElement("button");
+
+                    tashkeelBtn.className =
+                        "tashkeel";
+
+                    tashkeelBtn.textContent =
+                        "✨ Tashkeel";
+
+                    tashkeelBtn.onclick = () => {
+
+                        usingTashkeel =
+                            !usingTashkeel;
+
+                        if (usingTashkeel) {
+
+                            text.textContent =
+                                withTashkeel;
+
+                            tashkeelBtn.textContent =
+                                "✨ Tashkeel";
+
+                        }
+                        else {
+
+                            text.textContent =
+                                withoutTashkeel;
+
+                            tashkeelBtn.textContent =
+                                "○ Clean";
+
+                        }
+
+                    };
+
+                    /* =========================
+                       TRANSLATE BUTTON
+                    ========================= */
+
+                    const translateBtn =
+                        document.createElement("button");
+
+                    translateBtn.className =
+                        "translate";
+
+                    translateBtn.textContent =
+                        "🌐 Translate";
+
+                    /* =========================
+                       TRANSLATION WRAP
+                    ========================= */
+
+                    const translationWrap =
+                        document.createElement("div");
+
+                    translationWrap.className =
+                        "translation-wrap";
+
+                    /* =========================
+                       WBW
+                    ========================= */
+
+                    const wbw =
+                        document.createElement("div");
+
+                    wbw.className = "wbw";
+
+                    verse.words.forEach(w => {
+
+                        if (w.char_type_name !== "word")
+                            return;
+
+                        const word =
+                            document.createElement("span");
+
+                        word.className = "word";
+
+                        /* ARABIC */
+
+                        const ar =
+                            document.createElement("span");
+
+                        ar.className =
+                            "word-ar";
+
+                        ar.textContent =
+                            w.text_uthmani;
+
+                        /* BANGLA */
+
+                        const bn =
+                            document.createElement("span");
+
+                        bn.className =
+                            "word-bn";
+
+                        bn.textContent =
+                            w.translation?.text || "";
+
+                        word.appendChild(ar);
+                        word.appendChild(bn);
+
+                        wbw.appendChild(word);
+
+                    });
+
+                    /* =========================
+                       FULL TRANSLATION
+                    ========================= */
+
+                    const full =
+                        document.createElement("div");
+
+                    full.className =
+                        "full-translation";
+
+                    full.textContent =
+                        verse.translations?.[0]?.text || "";
+
+                    translationWrap.appendChild(wbw);
+                    translationWrap.appendChild(full);
+
+                    /* =========================
+                       TRANSLATION TOGGLE
+                    ========================= */
+
+                    let opened = false;
+
+                    translateBtn.onclick = () => {
+
+                        opened = !opened;
+
+                        translationWrap.style.display =
+                            opened ? "block" : "none";
+
+                        translateBtn.textContent =
+                            opened
+                                ? "✖ Hide"
+                                : "🌐 Translate";
+
+                    };
+
+                    /* APPEND BUTTONS */
+
+                    actions.appendChild(playBtn);
+                    actions.appendChild(loopBtn);
+                    actions.appendChild(copyBtn);
+                    actions.appendChild(tashkeelBtn);
+                    actions.appendChild(translateBtn);
+
+                    row.appendChild(right);
+                    row.appendChild(actions);
+
+                    out.appendChild(row);
+                    out.appendChild(translationWrap);
+
+                }
+
+            }
+            catch (e) {
+
+                console.log(e);
+
+                out.innerHTML =
+                    `<div class="loading">
+        Failed to load Quran
+      </div>`;
+
+            }
+
+        }
+
+        /* =========================
+           ENTER NAVIGATION
+        ========================= */
+
+        function setupEnterNavigation() {
+
+            const surah =
+                document.getElementById("surah");
+
+            const start =
+                document.getElementById("start");
+
+            const end =
+                document.getElementById("end");
+
+            surah.addEventListener("keydown", e => {
+
+                if (e.key === "Enter") {
+
+                    e.preventDefault();
+
+                    start.focus();
+
+                }
+
+            });
+
+            start.addEventListener("keydown", e => {
+
+                if (e.key === "Enter") {
+
+                    e.preventDefault();
+
+                    end.focus();
+
+                }
+
+            });
+
+            end.addEventListener("keydown", e => {
+
+                if (e.key === "Enter") {
+
+                    e.preventDefault();
+
+                    loadQuran();
+
+                }
+
+            });
+
+        }
+
+        setupEnterNavigation();
+
+        loadQuran();
+
+    </script>
+
+</body>
+
+</html>
