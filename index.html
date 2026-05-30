@@ -20,6 +20,8 @@
             --card: #ffffff;
             --soft: #f6faf8;
             --line: #d9e5df;
+            --range:#0891b2;
+	    --range-hover:#0e7490;
 
             --text: #1f2937;
             --muted: #64748b;
@@ -71,6 +73,27 @@
             border-bottom: 1px solid var(--line);
 
         }
+        
+        .range-loop{
+
+	    height:46px;
+
+	    padding:0 18px;
+
+	    border-radius:12px;
+
+	    background:var(--range);
+
+	    color:white;
+
+	    font-weight:700;
+
+	    font-size:15px;
+	}
+
+	.range-loop:hover{
+	    background:var(--range-hover);
+	}
 
         .topbar {
             max-width: 1200px;
@@ -453,14 +476,16 @@ Preserves Arabic flow correctly.
                 align-items: stretch;
             }
 
-            .controls {
+	.actions{
 
-                width: 100%;
+	    width:100%;
 
-                display: grid;
+	    display:grid;
 
-                grid-template-columns: 1fr 1fr 1fr auto;
-            }
+	    grid-template-columns:1fr 1fr;
+
+	    gap:8px;
+	}
 
             input {
                 width: 100%;
@@ -513,18 +538,27 @@ Preserves Arabic flow correctly.
                 line-height: 2.15;
             }
 
-            .word-ar {
-                font-size: 30px;
-            }
+		.word-ar{
+		    font-size:26px;
+		}
 
-            .word-bn {
-                font-size: 17px;
-            }
+		.word-bn{
+		    font-size:15px;
+		    max-width:80px;
+		}
 
-            .full-translation {
-                font-size: 20px;
-                line-height: 2.2;
-            }
+		.full-translation{
+
+		    font-size:18px;
+
+		    line-height:2.05;
+
+		    padding:20px;
+		}
+            
+            .translate{
+		    grid-column:span 2;
+		}
 
         }
 
@@ -567,6 +601,13 @@ Preserves Arabic flow correctly.
                 <button class="load" onclick="loadQuran()">
                     Load
                 </button>
+                
+                <button
+		    class="range-loop"
+		    id="rangeLoopBtn"
+		    onclick="toggleRangeLoop()">
+		    🔁 Range
+		</button>
 
             </div>
 
@@ -583,6 +624,9 @@ Preserves Arabic flow correctly.
         let currentAudio = null;
         let currentButton = null;
         let currentLoopButton = null;
+        let rangeLoopAudio = null;
+	let rangeLoopEnabled = false;
+	let rangeLoopStopRequested = false;
 
         /* =========================
            STOP AUDIO
@@ -638,6 +682,151 @@ Preserves Arabic flow correctly.
             return data.data.audio;
 
         }
+        
+        async function playRangeLoop(){
+
+	    const surah =
+		parseInt(
+		    document.getElementById("surah").value
+		);
+
+	    const start =
+		parseInt(
+		    document.getElementById("start").value
+		);
+
+	    const end =
+		parseInt(
+		    document.getElementById("end").value
+		);
+
+	    rangeLoopStopRequested = false;
+
+	    while(
+		rangeLoopEnabled &&
+		!rangeLoopStopRequested
+	    ){
+
+		for(
+		    let ayah=start;
+		    ayah<=end;
+		    ayah++
+		){
+
+		    if(
+		        !rangeLoopEnabled ||
+		        rangeLoopStopRequested
+		    ){
+		        return;
+		    }
+
+		    try{
+
+		        const verseKey =
+		            `${surah}:${ayah}`;
+
+		        const richUrl =
+		            `https://api.quran.com/api/v4/verses/by_key/${verseKey}`;
+
+		        const richRes =
+		            await fetch(richUrl);
+
+		        const richData =
+		            await richRes.json();
+
+		        const verseId =
+		            richData.verse.id;
+
+		        const audioUrl =
+		            await getAudioUrl(
+		                verseId
+		            );
+
+		        await new Promise(
+		            (resolve,reject)=>{
+
+		                const audio =
+		                    new Audio(audioUrl);
+
+		                rangeLoopAudio =
+		                    audio;
+
+		                audio.onended =
+		                    resolve;
+
+		                audio.onerror =
+		                    reject;
+
+		                audio.play();
+
+		            }
+		        );
+
+		    }
+		    catch(e){
+
+		        console.log(e);
+
+		    }
+
+		}
+
+	    }
+
+	}
+	
+	async function toggleRangeLoop(){
+
+		    const btn =
+			document.getElementById(
+			    "rangeLoopBtn"
+			);
+
+		    if(rangeLoopEnabled){
+
+			rangeLoopEnabled = false;
+
+			rangeLoopStopRequested = true;
+
+			if(rangeLoopAudio){
+
+			    rangeLoopAudio.pause();
+			    rangeLoopAudio.currentTime = 0;
+
+			}
+
+			btn.textContent =
+			    "🔁 Range";
+
+			btn.style.background = "";
+
+			return;
+		    }
+
+		    await stopCurrentAudio();
+
+		    rangeLoopEnabled = true;
+
+		    btn.textContent =
+			"⏹ Range";
+
+		    btn.style.background =
+			"#dc2626";
+
+		    playRangeLoop()
+		    .finally(()=>{
+
+			rangeLoopEnabled = false;
+
+			btn.textContent =
+			    "🔁 Range";
+
+			btn.style.background =
+			    "";
+
+		    });
+
+		}
 
         /* =========================
            LOAD QURAN
